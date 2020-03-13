@@ -118,9 +118,14 @@ public class MultipartFormData {
 
     var encoded = Data()
 
+    let bufferSize = 1024
+    let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+    defer {
+        buffer.deallocate()
+    }
+    
     while (inputStream.hasBytesAvailable) {
-      var buffer = [UInt8](repeating: 0, count: 1024)
-      let bytesRead = inputStream.read(&buffer, maxLength: 1024)
+      let bytesRead = inputStream.read(buffer, maxLength: bufferSize)
 
       if inputStream.streamError != nil {
         return encoded
